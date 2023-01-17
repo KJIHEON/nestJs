@@ -6,9 +6,8 @@ import { AppService } from './app.service';
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @Get(":id")
-  getHello(@Req() req:Request,@Body() Body ,@Param() param): string {
-    console.log(param)
+  @Get()
+  getHello() {
     return this.appService.getHello();
   }
 }
