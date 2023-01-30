@@ -15,10 +15,14 @@ const users_module_1 = require("./users/users.module");
 const logger_middleware_1 = require("./common/logger.middleware");
 const mongoose_1 = require("@nestjs/mongoose");
 const config_1 = require("@nestjs/config");
-console.log(process.env.MONGOURI, "여기임여기");
+const mongoose = require("mongoose");
 let AppModule = class AppModule {
+    constructor() {
+        this.isDev = process.env.MODE === 'dev' ? true : false;
+    }
     configure(consumer) {
         consumer.apply(logger_middleware_1.LoggerMiddleware).forRoutes('*');
+        mongoose.set('debug', this.isDev);
     }
 };
 AppModule = __decorate([
@@ -27,7 +31,9 @@ AppModule = __decorate([
             config_1.ConfigModule.forRoot(),
             cats_module_1.CatsModule,
             users_module_1.UsersModule,
-            mongoose_1.MongooseModule.forRoot(process.env.MONGOURI)
+            mongoose_1.MongooseModule.forRoot(process.env.MONGOURI, {
+                useCreateIndex: true,
+            })
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
