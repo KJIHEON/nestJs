@@ -10,11 +10,25 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
+const cats_module_1 = require("./cats/cats.module");
+const users_module_1 = require("./users/users.module");
+const logger_middleware_1 = require("./common/logger.middleware");
+const mongoose_1 = require("@nestjs/mongoose");
+const config_1 = require("@nestjs/config");
+console.log(process.env.MONGOURI, "여기임여기");
 let AppModule = class AppModule {
+    configure(consumer) {
+        consumer.apply(logger_middleware_1.LoggerMiddleware).forRoutes('*');
+    }
 };
 AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [],
+        imports: [
+            config_1.ConfigModule.forRoot(),
+            cats_module_1.CatsModule,
+            users_module_1.UsersModule,
+            mongoose_1.MongooseModule.forRoot(process.env.MONGOURI)
+        ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })
